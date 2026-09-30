@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Traceline — Follow the request. Land on the line.</title>
+<meta name="description" content="Traceline follows one request across every service, queue and database it touches, then shows you the exact line where it failed. Node, Go, Python and Rust. Free up to 50k traces a month.">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Traceline — Follow the request. Land on the line.">
+<meta property="og:description" content="Real-time error tracing for backend teams. One-line install. Free up to 50k traces a month.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/hero.css">
+<link rel="stylesheet" href="css/explorer.css">
+<link rel="stylesheet" href="css/sections.css">
+<script>
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('js');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('reduce');
+  })();
+</script>
+<noscript><style>.js [data-reveal]{opacity:1!important;transform:none!important}.js [data-split] .split-word>span,.js .hero__title .split-line>span{transform:none!important}</style></noscript>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7l-7 7"/></symbol>
+<symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"/></symbol>
+<symbol id="i-circle-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></g></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></g></symbol>
+<symbol id="i-git-commit-horizontal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h6m6 0h6"/></g></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 12h16M4 19h16"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7v14"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/></symbol>
+<symbol id="i-lang-go" viewBox="0 0 24 24"><path fill="currentColor" d="M1.811 10.231c-.047 0-.058-.023-.035-.059l.246-.315c.023-.035.081-.058.128-.058h4.172c.046 0 .058.035.035.07l-.199.303c-.023.036-.082.07-.117.07zM.047 11.306c-.047 0-.059-.023-.035-.058l.245-.316c.023-.035.082-.058.129-.058h5.328c.047 0 .07.035.058.07l-.093.28c-.012.047-.058.07-.105.07zm2.828 1.075c-.047 0-.059-.035-.035-.07l.163-.292c.023-.035.07-.07.117-.07h2.337c.047 0 .07.035.07.082l-.023.28c0 .047-.047.082-.082.082zm12.129-2.36c-.736.187-1.239.327-1.963.514c-.176.046-.187.058-.34-.117c-.174-.199-.303-.327-.548-.444c-.737-.362-1.45-.257-2.115.175c-.795.514-1.204 1.274-1.192 2.22c.011.935.654 1.706 1.577 1.835c.795.105 1.46-.175 1.987-.77c.105-.13.198-.27.315-.434H10.47c-.245 0-.304-.152-.222-.35c.152-.362.432-.97.596-1.274a.32.32 0 0 1 .292-.187h4.253c-.023.316-.023.631-.07.947a5 5 0 0 1-.958 2.29c-.841 1.11-1.94 1.8-3.33 1.986c-1.145.152-2.209-.07-3.143-.77c-.865-.655-1.356-1.52-1.484-2.595c-.152-1.274.222-2.419.993-3.424c.83-1.086 1.928-1.776 3.272-2.02c1.098-.2 2.15-.07 3.096.571c.62.41 1.063.97 1.356 1.648c.07.105.023.164-.117.2m3.868 6.461c-1.064-.024-2.034-.328-2.852-1.029a3.67 3.67 0 0 1-1.262-2.255c-.21-1.32.152-2.489.947-3.529c.853-1.122 1.881-1.706 3.272-1.95c1.192-.21 2.314-.095 3.33.595c.923.63 1.496 1.484 1.648 2.605c.198 1.578-.257 2.863-1.344 3.962c-.771.783-1.718 1.273-2.805 1.495c-.315.06-.63.07-.934.106m2.78-4.72c-.011-.153-.011-.27-.034-.387c-.21-1.157-1.274-1.81-2.384-1.554c-1.087.245-1.788.935-2.045 2.033c-.21.912.234 1.835 1.075 2.21c.643.28 1.285.244 1.905-.07c.923-.48 1.425-1.228 1.484-2.233z"/></symbol>
+<symbol id="i-lang-nodedotjs" viewBox="0 0 24 24"><path fill="currentColor" d="M11.998 24c-.321 0-.641-.084-.922-.247L8.14 22.016c-.438-.245-.224-.332-.08-.383c.585-.203.703-.25 1.328-.604c.065-.037.151-.023.218.017l2.256 1.339a.29.29 0 0 0 .272 0l8.795-5.076a.28.28 0 0 0 .134-.238V6.921a.28.28 0 0 0-.137-.242l-8.791-5.072a.28.28 0 0 0-.271 0L3.075 6.68a.28.28 0 0 0-.139.241v10.15a.27.27 0 0 0 .139.235l2.409 1.392c1.307.654 2.108-.116 2.108-.89V7.787c0-.142.114-.253.256-.253h1.115c.139 0 .255.112.255.253v10.021c0 1.745-.95 2.745-2.604 2.745c-.508 0-.909 0-2.026-.551L2.28 18.675a1.86 1.86 0 0 1-.922-1.604V6.921c0-.659.353-1.275.922-1.603L11.075.236a1.93 1.93 0 0 1 1.848 0l8.794 5.082c.57.329.924.944.924 1.603v10.15a1.86 1.86 0 0 1-.924 1.604l-8.794 5.078c-.28.163-.599.247-.925.247m7.101-10.007c0-1.9-1.284-2.406-3.987-2.763c-2.731-.361-3.009-.548-3.009-1.187c0-.528.235-1.233 2.258-1.233c1.807 0 2.473.389 2.747 1.607a.254.254 0 0 0 .247.199h1.141a.26.26 0 0 0 .186-.081a.26.26 0 0 0 .067-.196c-.177-2.098-1.571-3.076-4.388-3.076c-2.508 0-4.004 1.058-4.004 2.833c0 1.925 1.488 2.457 3.895 2.695c2.88.282 3.103.703 3.103 1.269c0 .983-.789 1.402-2.642 1.402c-2.327 0-2.839-.584-3.011-1.742a.255.255 0 0 0-.253-.215h-1.137a.25.25 0 0 0-.254.253c0 1.482.806 3.248 4.655 3.248c2.788.001 4.386-1.096 4.386-3.013"/></symbol>
+<symbol id="i-lang-python" viewBox="0 0 24 24"><path fill="currentColor" d="m14.25.18l.9.2l.73.26l.59.3l.45.32l.34.34l.25.34l.16.33l.1.3l.04.26l.02.2l-.01.13V8.5l-.05.63l-.13.55l-.21.46l-.26.38l-.3.31l-.33.25l-.35.19l-.35.14l-.33.1l-.3.07l-.26.04l-.21.02H8.77l-.69.05l-.59.14l-.5.22l-.41.27l-.33.32l-.27.35l-.2.36l-.15.37l-.1.35l-.07.32l-.04.27l-.02.21v3.06H3.17l-.21-.03l-.28-.07l-.32-.12l-.35-.18l-.36-.26l-.36-.36l-.35-.46l-.32-.59l-.28-.73l-.21-.88l-.14-1.05l-.05-1.23l.06-1.22l.16-1.04l.24-.87l.32-.71l.36-.57l.4-.44l.42-.33l.42-.24l.4-.16l.36-.1l.32-.05l.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75l-.02-.37l.05-.34l.11-.31l.17-.28l.25-.26l.31-.23l.38-.2l.44-.18l.51-.15l.58-.12l.64-.1l.71-.06l.77-.04l.84-.02l1.27.05zm-6.3 1.98l-.23.33l-.08.41l.08.41l.23.34l.33.22l.41.09l.41-.09l.33-.22l.23-.34l.08-.41l-.08-.41l-.23-.33l-.33-.22l-.41-.09l-.41.09zm13.09 3.95l.28.06l.32.12l.35.18l.36.27l.36.35l.35.47l.32.59l.28.73l.21.88l.14 1.04l.05 1.23l-.06 1.23l-.16 1.04l-.24.86l-.32.71l-.36.57l-.4.45l-.42.33l-.42.24l-.4.16l-.36.09l-.32.05l-.24.02l-.16-.01h-8.22v.82h5.84l.01 2.76l.02.36l-.05.34l-.11.31l-.17.29l-.25.25l-.31.24l-.38.2l-.44.17l-.51.15l-.58.13l-.64.09l-.71.07l-.77.04l-.84.01l-1.27-.04l-1.07-.14l-.9-.2l-.73-.25l-.59-.3l-.45-.33l-.34-.34l-.25-.34l-.16-.33l-.1-.3l-.04-.25l-.02-.2l.01-.13v-5.34l.05-.64l.13-.54l.21-.46l.26-.38l.3-.32l.33-.24l.35-.2l.35-.14l.33-.1l.3-.06l.26-.04l.21-.02l.13-.01h5.84l.69-.05l.59-.14l.5-.21l.41-.28l.33-.32l.27-.35l.2-.36l.15-.36l.1-.35l.07-.32l.04-.28l.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33l-.08.41l.08.41l.23.33l.33.23l.41.08l.41-.08l.33-.23l.23-.33l.08-.41l-.08-.41l-.23-.33l-.33-.23l-.41-.08l-.41.08z"/></symbol>
+<symbol id="i-lang-rust" viewBox="0 0 24 24"><path fill="currentColor" d="m23.835 11.703l-1.008-.623l-.028-.294l.866-.807a.348.348 0 0 0-.116-.578l-1.106-.414a9 9 0 0 0-.087-.285l.69-.96a.346.346 0 0 0-.226-.544l-1.166-.19a9 9 0 0 0-.14-.261l.49-1.076a.34.34 0 0 0-.028-.336a.35.35 0 0 0-.3-.154l-1.185.041a7 7 0 0 0-.188-.227l.273-1.153a.347.347 0 0 0-.417-.417l-1.153.273l-.228-.188l.041-1.184a.344.344 0 0 0-.49-.328l-1.076.49l-.262-.14l-.19-1.167a.348.348 0 0 0-.545-.226l-.96.69a9 9 0 0 0-.285-.086L14.597.453a.348.348 0 0 0-.578-.116l-.807.867a9 9 0 0 0-.294-.028L12.295.168a.346.346 0 0 0-.59 0l-.623 1.008l-.294.028L9.98.337a.346.346 0 0 0-.578.116l-.414 1.106l-.285.086l-.959-.69a.348.348 0 0 0-.545.226l-.19 1.167a9 9 0 0 0-.262.14l-1.076-.49a.346.346 0 0 0-.49.328l.041 1.184a8 8 0 0 0-.228.187l-1.153-.272a.347.347 0 0 0-.417.417l.271 1.153l-.186.227l-1.184-.042a.346.346 0 0 0-.328.49l.49 1.077a9 9 0 0 0-.14.262l-1.166.19a.348.348 0 0 0-.226.544l.69.958l-.087.286l-1.106.414a.348.348 0 0 0-.116.578l.866.807a9 9 0 0 0-.028.294l-1.008.623a.344.344 0 0 0 0 .59l1.008.623q.012.147.028.294l-.866.807a.346.346 0 0 0 .116.578l1.106.415q.042.144.087.285l-.69.959a.345.345 0 0 0 .227.544l1.166.19q.069.132.14.262l-.49 1.076a.346.346 0 0 0 .328.49l1.183-.041q.093.115.187.227l-.27 1.154a.346.346 0 0 0 .416.417l1.153-.272q.113.096.228.187l-.041 1.184a.344.344 0 0 0 .49.327l1.076-.49q.13.073.262.14l.19 1.167a.348.348 0 0 0 .545.227l.959-.69a9 9 0 0 0 .285.086l.414 1.107a.345.345 0 0 0 .578.115l.808-.865l.294.03l.623 1.006a.347.347 0 0 0 .59 0l.623-1.007q.148-.013.294-.03l.807.866a.348.348 0 0 0 .578-.115l.414-1.107a9 9 0 0 0 .285-.087l.959.69a.345.345 0 0 0 .545-.226l.19-1.166l.262-.14l1.076.49a.347.347 0 0 0 .49-.328l-.041-1.184a7 7 0 0 0 .227-.187l1.153.272a.347.347 0 0 0 .417-.416l-.272-1.155q.095-.112.187-.227l1.184.041a.344.344 0 0 0 .328-.49l-.49-1.076q.072-.13.141-.262l1.166-.19a.348.348 0 0 0 .226-.544l-.69-.959l.087-.285l1.106-.414a.346.346 0 0 0 .116-.579l-.866-.807q.016-.147.028-.294l1.008-.624a.344.344 0 0 0 0-.589zm-6.742 8.355a.714.714 0 0 1 .299-1.396a.714.714 0 1 1-.3 1.396zm-.342-2.314a.65.65 0 0 0-.771.5l-.358 1.669a8.7 8.7 0 0 1-3.619.78a8.7 8.7 0 0 1-3.695-.815L7.95 18.21a.65.65 0 0 0-.772-.5l-1.473.317a9 9 0 0 1-.761-.898h7.167c.081 0 .136-.014.136-.088v-2.536c0-.074-.054-.088-.136-.088h-2.096v-1.608h2.268c.206 0 1.106.059 1.393 1.209c.09.353.288 1.504.424 1.873c.134.413.683 1.238 1.268 1.238h3.572a1 1 0 0 0 .13-.013a9 9 0 0 1-.813.952zm-9.914 2.28a.714.714 0 1 1-.3-1.396a.714.714 0 0 1 .3 1.396M4.117 8.997a.714.714 0 1 1-1.303.58a.714.714 0 0 1 1.304-.58m-.834 1.981l1.534-.682a.65.65 0 0 0 .33-.858l-.316-.715h1.244v5.602H3.567a8.8 8.8 0 0 1-.284-3.348zm6.734-.543V8.784h2.96c.153 0 1.08.177 1.08.87c0 .574-.712.78-1.296.78zm10.757 1.486q0 .329-.024.651h-.9c-.09 0-.127.059-.127.148v.413c0 .973-.548 1.184-1.03 1.238c-.457.052-.964-.191-1.027-.472c-.27-1.518-.72-1.843-1.43-2.403c.882-.56 1.799-1.386 1.799-2.492c0-1.193-.82-1.945-1.377-2.315c-.783-.516-1.65-.62-1.883-.62H5.468a8.77 8.77 0 0 1 4.907-2.77l1.098 1.152a.65.65 0 0 0 .918.02l1.227-1.173a8.78 8.78 0 0 1 6.004 4.276l-.84 1.898a.65.65 0 0 0 .33.859l1.618.718q.042.43.042.872zm-9.3-9.6a.713.713 0 1 1 .984 1.032a.714.714 0 0 1-.984-1.031m8.339 6.71a.71.71 0 0 1 .939-.362a.714.714 0 1 1-.94.364z"/></symbol>
+</defs></svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="cursor" aria-hidden="true">
+  <div class="cursor__ring"></div>
+  <div class="cursor__dot"></div>
+  <div class="cursor__label"></div>
+</div>
+
+<!-- ============================== NAV ============================== -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#top" aria-label="Traceline, back to top">
+      <svg class="brand__mark" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="4" width="24" height="4" rx="2" fill="currentColor"/><rect x="6" y="11" width="13" height="4" rx="2" fill="currentColor" opacity=".65"/><rect x="11" y="18" width="14" height="4" rx="2" fill="#c8f531"/></svg>
+      <span class="brand__word">TRACELINE</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#demo">Demo</a>
+      <a href="#install">Install</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav__cta">
+      <button class="btn btn--ghost btn--sm" type="button" data-open-demo>Book a demo</button>
+      <a class="btn btn--primary btn--sm" href="#start" data-magnetic>Start tracing free</a>
+    </div>
+    <button class="nav__toggle" id="menuBtn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+      <svg class="i i-open" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="i i-close" aria-hidden="true"><use href="#i-x"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Menu" aria-modal="true" inert>
+  <nav aria-label="Mobile">
+    <ul>
+      <li><a href="#demo">Demo <small>01</small></a></li>
+      <li><a href="#install">Install <small>02</small></a></li>
+      <li><a href="#features">Features <small>03</small></a></li>
+      <li><a href="#pricing">Pricing <small>05</small></a></li>
+      <li><a href="#faq">FAQ <small>07</small></a></li>
+    </ul>
+  </nav>
+  <div class="mobile-menu__cta">
+    <a class="btn btn--primary btn--lg" href="#start">Start tracing free <svg class="i arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    <button class="btn btn--ghost btn--lg" type="button" data-open-demo>Book a demo</button>
+  </div>
+</div>
+
+<nav class="rail" id="rail" aria-label="Page sections">
+  <ol>
+    <li><a href="#top"><span>Top</span></a></li>
+    <li><a href="#demo"><span>Demo</span></a></li>
+    <li><a href="#install"><span>Install</span></a></li>
+    <li><a href="#features"><span>Features</span></a></li>
+    <li><a href="#numbers"><span>Numbers</span></a></li>
+    <li><a href="#pricing"><span>Pricing</span></a></li>
+    <li><a href="#proof"><span>Proof</span></a></li>
+    <li><a href="#faq"><span>FAQ</span></a></li>
+    <li><a href="#start"><span>Start</span></a></li>
+  </ol>
+</nav>
+
+<main id="main">
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" id="top" aria-labelledby="heroTitle" data-section="Top">
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__glow"></div>
+    <div class="hero__grid"></div>
+    <div class="hero__grid hero__grid--hot"></div>
+  </div>
+
+  <div class="wrap hero__wrap">
+    <div class="hero__copy">
+      <a class="badge" href="#install" data-reveal><b>NEW</b> Rust SDK is generally available <svg class="i" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+
+      <h1 class="hero__title" id="heroTitle">
+        <span class="split-line"><span>Follow</span></span>
+        <span class="split-line"><span>the request.</span></span>
+        <span class="split-line"><span>Land on</span></span>
+        <span class="split-line"><span><em>the line.</em><span class="caret" aria-hidden="true"></span></span></span>
+      </h1>
+
+      <p class="hero__sub" data-reveal>Traceline follows a single request across every service, queue and database it touches, then stops on the exact line of code where it failed. One-line install for Node, Go, Python and Rust.</p>
+
+      <div class="hero__ctas" data-reveal>
+        <a class="btn btn--primary btn--lg" href="#start" data-magnetic>Start tracing free <svg class="i arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        <button class="btn btn--ghost btn--lg" type="button" data-open-demo>Book a demo</button>
+      </div>
+
+      <div class="hero__meta" data-reveal>
+        <div class="cmd">
+          <span class="prompt" aria-hidden="true">$</span>
+          <code id="heroCmd">curl -sSf https://get.traceline.dev | sh</code>
+          <button class="copy" type="button" data-copy-target="#heroCmd" aria-label="Copy install command">
+            <svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg>
+            <svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg>
+            <span data-copy-label>Copy</span>
+          </button>
+        </div>
+        <p class="hero__fine">
+          <span><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Free up to 50k traces a month</span>
+          <span><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>No credit card</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="stage" id="stage" data-cursor="inspect" data-reveal>
+      <div class="stage__bar">
+        <span class="stage__id"><i></i>trace <b>7f3a91c</b></span>
+        <span class="stage__route">POST /checkout</span>
+        <span class="stage__right">
+          <span class="stage__time" id="stageTime">0 ms</span>
+          <span class="stage__status" id="stageStatus">Tracing</span>
+        </span>
+      </div>
+      <div class="stage__canvas" id="stageCanvas">
+        <canvas id="heroCanvas" role="img" aria-label="Animated diagram. A checkout request travels from the client through the API gateway, auth, orders, inventory and database services, then stalls at the payments service, which fails on line 142 of charge.go with a deadline exceeded error."></canvas>
+        <div class="tip" id="stageTip" aria-hidden="true"></div>
+        <div class="stage__err" id="stageErr">
+          <span class="tag">ERROR</span>
+          <p><b>payments/charge.go:142</b> context deadline exceeded after 2,000 ms</p>
+          <a href="#demo" data-jump>Jump to line <svg class="i" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        </div>
+      </div>
+      <ol class="stage__log" id="stageLog" aria-hidden="true"></ol>
+    </div>
+  </div>
+</section>
+
+<section class="trusted" aria-label="Teams using Traceline">
+  <div class="wrap">
+    <p>Tracing production at</p>
+    <ul>
+      <li class="wm-1">Marlowe</li>
+      <li class="wm-2">Fenwick Logistics</li>
+      <li class="wm-3">quill/analytics</li>
+      <li class="wm-4">Halcyon Rail</li>
+      <li class="wm-5">Ostrava Labs</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================== DEMO ============================== -->
+<section class="section section-pad" id="demo" aria-labelledby="demoTitle" data-section="Demo">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal><span>01</span> Trace explorer</p>
+      <h2 id="demoTitle" data-split>Click through a real failure.</h2>
+      <p class="lede" data-reveal>A checkout timed out after two and a half seconds. Open the spans, read the timings, then jump to the line that caused it. Nothing here is a screenshot.</p>
+    </header>
+
+    <div class="explorer" id="explorer" data-reveal>
+      <div class="ex-head">
+        <div class="ex-title"><span class="ex-method">POST</span><span>/checkout</span><span class="ex-id">trace 7f3a91c</span></div>
+        <dl class="ex-stats">
+          <div><dt>Duration</dt><dd id="exStatDur">2,524 ms</dd></div>
+          <div><dt>Spans</dt><dd id="exStatSpans">12</dd></div>
+          <div><dt>Services</dt><dd id="exStatSvc">9</dd></div>
+          <div class="is-err"><dt>Errors</dt><dd id="exStatErr">1</dd></div>
+        </dl>
+        <button class="btn btn--err btn--sm" type="button" id="jumpBtn"><svg class="i" aria-hidden="true"><use href="#i-circle-alert"/></svg>Jump to failing line</button>
+      </div>
+
+      <div class="ex-body">
+        <div class="ex-tree-wrap">
+          <div class="ex-axis" aria-hidden="true"><span>Span</span><div class="ex-ticks" id="exTicks"></div></div>
+          <ul class="ex-tree" role="tree" aria-label="Spans in trace 7f3a91c" id="exTree" data-cursor="select"></ul>
+          <noscript><p style="padding:20px">The trace explorer needs JavaScript. In short: a checkout call timed out after 2,524 ms because payments/charge.go line 142 waited two seconds on the card processor.</p></noscript>
+          <div class="ex-hint" aria-hidden="true">
+            <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
+            <span><kbd>→</kbd><kbd>←</kbd> expand, collapse</span>
+            <span><kbd>Enter</kbd> view source</span>
+            <span><kbd>J</kbd> jump to failure</span>
+          </div>
+        </div>
+
+        <aside class="ex-detail" aria-label="Span details">
+          <div class="ex-tabs" role="tablist" aria-label="Span view">
+            <button type="button" role="tab" id="exTabSpan" aria-selected="true" aria-controls="exPanelSpan">Span</button>
+            <button type="button" role="tab" id="exTabSrc" aria-selected="false" aria-controls="exPanelSrc" tabindex="-1">Source</button>
+          </div>
+          <div class="ex-panel" id="exPanelSpan" role="tabpanel" aria-labelledby="exTabSpan" tabindex="0"></div>
+          <div class="ex-panel" id="exPanelSrc" role="tabpanel" aria-labelledby="exTabSrc" tabindex="0" hidden></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== INSTALL ============================== -->
+<section class="section section-pad" id="install" aria-labelledby="installTitle" data-section="Install">
+  <div class="wrap">
+    <div class="install">
+      <div class="install__copy">
+        <p class="eyebrow" data-reveal><span>02</span> Install</p>
+        <h2 id="installTitle" data-split>One line in.<br>Every service traced.</h2>
+        <p class="lede" data-reveal>No agent to babysit and no config file to write. Pick your language, paste two snippets, deploy. The first trace shows up about five seconds later.</p>
+
+        <ol class="steps" data-reveal>
+          <li><span>1</span><div><b>Add the SDK.</b> One package, no native build step.</div></li>
+          <li><span>2</span><div><b>Name the service.</b> One line at startup. Frameworks, databases and queues are picked up automatically.</div></li>
+          <li><span>3</span><div><b>Deploy.</b> Traces start flowing. Errors arrive with file, line and commit.</div></li>
+        </ol>
+
+        <ul class="compat" aria-label="Supported runtimes" data-reveal>
+          <li>Node 18+</li><li>Go 1.21+</li><li>Python 3.9+</li><li>Rust 1.75+</li>
+        </ul>
+      </div>
+
+      <div class="term" id="installTerm" data-reveal>
+        <div class="term__bar">
+          <div class="tabs" role="tablist" aria-label="Choose your language">
+            <button type="button" role="tab" id="tab-node" aria-selected="true" aria-controls="panel-node"><svg class="i" aria-hidden="true"><use href="#i-lang-nodedotjs"/></svg>Node.js</button>
+            <button type="button" role="tab" id="tab-go" aria-selected="false" aria-controls="panel-go" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-lang-go"/></svg>Go</button>
+            <button type="button" role="tab" id="tab-py" aria-selected="false" aria-controls="panel-py" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-lang-python"/></svg>Python</button>
+            <button type="button" role="tab" id="tab-rs" aria-selected="false" aria-controls="panel-rs" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-lang-rust"/></svg>Rust</button>
+          </div>
+        </div>
+
+        <div class="term__panels">
+          <div role="tabpanel" id="panel-node" aria-labelledby="tab-node" tabindex="0">
+            <div class="block"><div class="block__head"><span>Install</span><button class="copy" type="button" data-copy-target="#c-node-1" aria-label="Copy Node.js install command"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-node-1" data-lang="sh">npm install @traceline/node</code></pre></div>
+            <div class="block"><div class="block__head"><span>server.js</span><button class="copy" type="button" data-copy-target="#c-node-2" aria-label="Copy Node.js setup code"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-node-2" data-lang="js">import { trace } from "@traceline/node";
+
+trace.init({ service: "api-gateway" });</code></pre></div>
+            <div class="block block--out"><div class="block__head"><span>Output</span></div>
+<pre><code data-lang="out"><svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>connected      service=api-gateway env=production
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>instrumented   express, undici, ioredis, kafkajs
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>first trace    app.traceline.dev/t/7f3a91c</code></pre></div>
+          </div>
+
+          <div role="tabpanel" id="panel-go" aria-labelledby="tab-go" tabindex="0" hidden>
+            <div class="block"><div class="block__head"><span>Install</span><button class="copy" type="button" data-copy-target="#c-go-1" aria-label="Copy Go install command"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-go-1" data-lang="sh">go get traceline.dev/go</code></pre></div>
+            <div class="block"><div class="block__head"><span>main.go</span><button class="copy" type="button" data-copy-target="#c-go-2" aria-label="Copy Go setup code"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-go-2" data-lang="go">import "traceline.dev/go/trace"
+
+func main() {
+	defer trace.Init("payments-svc").Shutdown()
+	// ...
+}</code></pre></div>
+            <div class="block block--out"><div class="block__head"><span>Output</span></div>
+<pre><code data-lang="out"><svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>connected      service=payments-svc env=production
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>instrumented   net/http, grpc, pgx, go-redis
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>first trace    app.traceline.dev/t/7f3a91c</code></pre></div>
+          </div>
+
+          <div role="tabpanel" id="panel-py" aria-labelledby="tab-py" tabindex="0" hidden>
+            <div class="block"><div class="block__head"><span>Install</span><button class="copy" type="button" data-copy-target="#c-py-1" aria-label="Copy Python install command"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-py-1" data-lang="sh">pip install traceline</code></pre></div>
+            <div class="block"><div class="block__head"><span>main.py</span><button class="copy" type="button" data-copy-target="#c-py-2" aria-label="Copy Python setup code"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-py-2" data-lang="py">import traceline
+
+traceline.init(service="orders-svc")</code></pre></div>
+            <div class="block block--out"><div class="block__head"><span>Output</span></div>
+<pre><code data-lang="out"><svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>connected      service=orders-svc env=production
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>instrumented   fastapi, asyncpg, redis, aiokafka
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>first trace    app.traceline.dev/t/7f3a91c</code></pre></div>
+          </div>
+
+          <div role="tabpanel" id="panel-rs" aria-labelledby="tab-rs" tabindex="0" hidden>
+            <div class="block"><div class="block__head"><span>Install</span><button class="copy" type="button" data-copy-target="#c-rs-1" aria-label="Copy Rust install command"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-rs-1" data-lang="sh">cargo add traceline</code></pre></div>
+            <div class="block"><div class="block__head"><span>src/main.rs</span><button class="copy" type="button" data-copy-target="#c-rs-2" aria-label="Copy Rust setup code"><svg class="i i-copy" aria-hidden="true"><use href="#i-copy"/></svg><svg class="i i-check" aria-hidden="true"><use href="#i-check"/></svg><span data-copy-label>Copy</span></button></div>
+<pre><code id="c-rs-2" data-lang="rs">#[traceline::main(service = "auth-svc")]
+async fn main() {
+    // ...
+}</code></pre></div>
+            <div class="block block--out"><div class="block__head"><span>Output</span></div>
+<pre><code data-lang="out"><svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>connected      service=auth-svc env=production
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>instrumented   axum, tonic, sqlx, redis-rs
+<svg class="i ok" aria-hidden="true"><use href="#i-check"/></svg>first trace    app.traceline.dev/t/7f3a91c</code></pre></div>
+          </div>
+        </div>
+        <p class="sr-only" id="copyStatus" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FEATURES ============================== -->
+<section class="section section-pad" id="features" aria-labelledby="featTitle" data-section="Features">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal><span>03</span> What it does</p>
+      <h2 id="featTitle" data-split>Made for the 2 a.m. page.</h2>
+      <p class="lede" data-reveal>Logs tell you something broke. Traceline tells you where, in which service, on which line, and what changed. Five things it does that a pile of dashboards does not.</p>
+    </header>
+
+    <div class="feat" id="feat">
+      <ol class="feat__list" id="featList">
+        <li class="feat__item is-active" data-i="0">
+          <span class="feat__num">01</span>
+          <h3>One request, every hop</h3>
+          <p>Traceline carries a trace ID through HTTP, gRPC, Kafka, SQS and scheduled jobs. When a request changes process, language or queue, the trail stays whole. You see one request, not five log streams.</p>
+          <ul class="feat__tags"><li>HTTP</li><li>gRPC</li><li>Kafka</li><li>SQS</li><li>Cron</li></ul>
+        </li>
+        <li class="feat__item" data-i="1">
+          <span class="feat__num">02</span>
+          <h3>Lands on the line</h3>
+          <p>Every error links to the file, the line and the commit that put it there. Source is read at deploy time, so what you see is what ran. The person who last touched it is one click away.</p>
+          <ul class="feat__tags"><li>Source preview</li><li>Git blame</li><li>Stack frames</li></ul>
+        </li>
+        <li class="feat__item" data-i="2">
+          <span class="feat__num">03</span>
+          <h3>Queues and databases count too</h3>
+          <p>Time spent waiting in a queue is time your user waited. Traceline measures the gap between publish and consume, and flags N+1 queries without a single hand-written span.</p>
+          <ul class="feat__tags"><li>Postgres</li><li>MySQL</li><li>Redis</li><li>RabbitMQ</li></ul>
+        </li>
+        <li class="feat__item" data-i="3">
+          <span class="feat__num">04</span>
+          <h3>Keep every error. Sample the rest.</h3>
+          <p>Sampling happens after the request finishes, so we know how it ended. Every failed or slow trace is kept in full. Healthy traffic is sampled down. Your bill follows your problems, not your traffic.</p>
+          <ul class="feat__tags"><li>Tail-based</li><li>Per-service rules</li></ul>
+        </li>
+        <li class="feat__item" data-i="4">
+          <span class="feat__num">05</span>
+          <h3>Diff any two traces</h3>
+          <p>Put a slow request next to a healthy one. Traceline lines up the spans and shows the one that grew. No more scrolling two waterfalls and squinting.</p>
+          <ul class="feat__tags"><li>Span alignment</li><li>Regression view</li></ul>
+        </li>
+      </ol>
+
+      <div class="feat__stage" id="featStage" aria-hidden="true">
+        <div class="stage-frame">
+          <div class="stage-frame__bar"><span id="figLabel">fig. 01 — propagation</span><span class="stage-frame__dots"><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="stage-frame__body">
+
+            <!-- viz 0: propagation -->
+            <div class="viz is-active" data-viz="0">
+              <svg viewBox="0 0 520 380" class="v0" role="presentation">
+                <g class="v0-paths" fill="none" stroke-width="1.5" stroke-linejoin="round">
+                  <path id="v0p1" d="M230 62 H390 V118"/>
+                  <path id="v0p2" d="M390 182 V196 H130 V212"/>
+                  <path id="v0p3" d="M130 276 V290 H390 V306"/>
+                </g>
+                <g class="v0-proto" font-size="11">
+                  <g transform="translate(326 62)"><rect x="-26" y="-11" width="52" height="22" rx="5"/><text text-anchor="middle" y="4">gRPC</text></g>
+                  <g transform="translate(260 196)"><rect x="-27" y="-11" width="54" height="22" rx="5"/><text text-anchor="middle" y="4">Kafka</text></g>
+                  <g transform="translate(326 290)"><rect x="-24" y="-11" width="48" height="22" rx="5"/><text text-anchor="middle" y="4">poll</text></g>
+                </g>
+                <g class="v0-node" data-n="0" transform="translate(30 30)"><rect width="200" height="64" rx="10"/><text x="16" y="28" class="t1">api-gateway</text><text x="16" y="48" class="t2">Node.js</text><g class="v0-id" transform="translate(112 34)"><rect width="76" height="20" rx="4"/><text x="8" y="14">7f3a91c</text></g></g>
+                <g class="v0-node" data-n="1" transform="translate(290 120)"><rect width="200" height="64" rx="10"/><text x="16" y="28" class="t1">orders-svc</text><text x="16" y="48" class="t2">Python</text><g class="v0-id" transform="translate(112 34)"><rect width="76" height="20" rx="4"/><text x="8" y="14">7f3a91c</text></g></g>
+                <g class="v0-node" data-n="2" transform="translate(30 214)"><rect width="200" height="64" rx="10"/><text x="16" y="28" class="t1">orders.events</text><text x="16" y="48" class="t2">Kafka topic</text><g class="v0-id" transform="translate(112 34)"><rect width="76" height="20" rx="4"/><text x="8" y="14">7f3a91c</text></g></g>
+                <g class="v0-node" data-n="3" transform="translate(290 308)"><rect width="200" height="64" rx="10"/><text x="16" y="28" class="t1">ledger-worker</text><text x="16" y="48" class="t2">Rust</text><g class="v0-id" transform="translate(112 34)"><rect width="76" height="20" rx="4"/><text x="8" y="14">7f3a91c</text></g></g>
+                <g class="v0-packet"><circle r="14" class="glow"/><circle r="4.5"/></g>
+              </svg>
+            </div>
+
+            <!-- viz 1: line -->
+            <div class="viz" data-viz="1">
+              <div class="v1">
+                <div class="v1__file"><span>payments/charge.go</span><em>error at line 142</em></div>
+                <div class="v1__code code">
+                  <div class="v1__scan"></div>
+                  <div class="code__in">
+<div class="ln"><b>136</b><code data-lang="go">	defer cancel()</code></div>
+<div class="ln"><b>137</b><code data-lang="go"></code></div>
+<div class="ln"><b>138</b><code data-lang="go">	req := c.psp.NewCharge(o.ID, o.Total, o.Currency)</code></div>
+<div class="ln"><b>139</b><code data-lang="go">	req.Header.Set("Idempotency-Key", o.ID)</code></div>
+<div class="ln"><b>140</b><code data-lang="go"></code></div>
+<div class="ln"><b>141</b><code data-lang="go">	// wait for the processor</code></div>
+<div class="ln v1__hit"><b>142</b><code data-lang="go">	resp, err := c.psp.Do(ctx, req)</code></div>
+<div class="code__note v1__note"><svg class="i" aria-hidden="true"><use href="#i-circle-alert"/></svg>context deadline exceeded (2,000 ms)</div>
+<div class="ln"><b>143</b><code data-lang="go">	if err != nil {</code></div>
+<div class="ln"><b>144</b><code data-lang="go">		return nil, fmt.Errorf("charge %s: %w", o.ID, err)</code></div>
+<div class="ln"><b>145</b><code data-lang="go">	}</code></div>
+                  </div>
+                </div>
+                <div class="v1__meta">
+                  <div class="v1__chip"><svg class="i" aria-hidden="true"><use href="#i-git-commit-horizontal"/></svg><span>introduced in <code>a91c3f2</code> by <b>l.karlsson</b>, 3 days ago</span></div>
+                  <div class="v1__chip v1__chip--b"><span>&ldquo;raise psp timeout, drop retry&rdquo;</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- viz 2: queues and databases -->
+            <div class="viz" data-viz="2">
+              <div class="v2">
+                <div class="v2__block">
+                  <p class="v2__cap">orders.events <span>publish to consume</span></p>
+                  <div class="v2__row"><span>publish</span><div class="v2__track"><i class="v2__bar v2__bar--a" style="--l:0%;--w:5%"></i></div><b>6 ms</b></div>
+                  <div class="v2__row"><span>in queue</span><div class="v2__track"><i class="v2__bar v2__bar--wait" style="--l:5%;--w:64%"></i></div><b class="is-warn">312 ms</b></div>
+                  <div class="v2__row"><span>consume</span><div class="v2__track"><i class="v2__bar v2__bar--b" style="--l:69%;--w:30%"></i></div><b>146 ms</b></div>
+                </div>
+                <div class="v2__block">
+                  <p class="v2__cap">orders-svc <span>repeated query</span></p>
+                  <div class="v2__n1" id="v2n1"></div>
+                  <div class="v2__sql"><code data-lang="sql">SELECT * FROM line_items WHERE order_id = $1</code></div>
+                  <div class="v2__flag"><svg class="i" aria-hidden="true"><use href="#i-circle-alert"/></svg><span><b>N+1</b> 48 queries, 612 ms. Batch with <code>ANY($1)</code>.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- viz 3: sampling -->
+            <div class="viz" data-viz="3">
+              <div class="v3">
+                <canvas id="samplerCanvas" width="520" height="380"></canvas>
+                <div class="v3__counters">
+                  <div><span>errors kept</span><b id="v3err">100%</b></div>
+                  <div><span>healthy kept</span><b id="v3ok">4%</b></div>
+                  <div><span>storage saved</span><b id="v3sav">93%</b></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- viz 4: diff -->
+            <div class="viz" data-viz="4">
+              <div class="v4">
+                <div class="v4__set">
+                  <p class="v4__cap"><span class="v4__dot"></span>Baseline <em>412 ms, 200</em></p>
+                  <div class="v4__row"><span>api-gateway</span><div class="v4__track"><i style="--l:0%;--w:100%" class="c-blue"></i></div></div>
+                  <div class="v4__row"><span>orders-svc</span><div class="v4__track"><i style="--l:6%;--w:92%" class="c-cyan"></i></div></div>
+                  <div class="v4__row"><span>inventory-svc</span><div class="v4__track"><i style="--l:14%;--w:38%" class="c-amber"></i></div></div>
+                  <div class="v4__row"><span>payments-svc</span><div class="v4__track"><i style="--l:56%;--w:36%" class="c-red"></i></div></div>
+                </div>
+                <div class="v4__set v4__set--slow">
+                  <p class="v4__cap"><span class="v4__dot v4__dot--err"></span>Slow <em>2,524 ms, 500</em></p>
+                  <div class="v4__row"><span>api-gateway</span><div class="v4__track"><i style="--l:0%;--w:100%" class="c-blue"></i></div></div>
+                  <div class="v4__row"><span>orders-svc</span><div class="v4__track"><i style="--l:2%;--w:97%" class="c-cyan"></i></div></div>
+                  <div class="v4__row"><span>inventory-svc</span><div class="v4__track"><i style="--l:4%;--w:12%" class="c-amber"></i></div></div>
+                  <div class="v4__row is-delta"><span>payments-svc</span><div class="v4__track"><i style="--l:17%;--w:80%" class="c-red v4__grow"></i><b class="v4__delta">+1,940 ms</b></div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== NUMBERS ============================== -->
+<section class="section section-pad" id="numbers" aria-labelledby="numTitle" data-section="Numbers">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal><span>04</span> In production</p>
+      <h2 id="numTitle" data-split>Fast enough to leave on.</h2>
+      <p class="lede" data-reveal>A tracing tool that slows your service down gets switched off. Ours is built to stay out of the way, and to stay up when yours does not.</p>
+    </header>
+
+    <div class="nums" id="nums">
+      <article class="num num--a" data-reveal>
+        <p class="num__label">Latency overhead</p>
+        <p class="num__value"><span data-count="0.6" data-dec="1">0.6</span><small>ms</small></p>
+        <p class="num__desc">p99 added per request. Spans are batched and sent off the request path. If the collector is unreachable, the SDK drops data instead of blocking your code.</p>
+        <div class="hist" id="hist" aria-hidden="true"></div>
+        <div class="hist__axis" aria-hidden="true"><span>0 ms</span><span>overhead per request</span><span>2 ms</span></div>
+      </article>
+      <article class="num" data-reveal>
+        <p class="num__label">Traces ingested</p>
+        <p class="num__value"><span data-count="41" data-dec="0">41</span><small>billion a day</small></p>
+        <p class="num__desc">Across 3,900 teams.</p>
+        <p class="live"><i></i>ingested today <b id="liveCount">0</b></p>
+      </article>
+      <article class="num" data-reveal>
+        <p class="num__label">Alert to failing line</p>
+        <p class="num__value"><span data-count="11" data-dec="0">11</span><small>seconds, median</small></p>
+        <p class="num__desc">From the page firing to a developer reading the exact line.</p>
+      </article>
+      <article class="num" data-reveal>
+        <p class="num__label">Ingest availability</p>
+        <p class="num__value"><span data-count="99.99" data-dec="2">99.99</span><small>%, trailing 12 months</small></p>
+        <p class="num__desc">Measured at the edge, not at the dashboard.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PRICING ============================== -->
+<section class="section section-pad" id="pricing" aria-labelledby="priceTitle" data-section="Pricing">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal><span>05</span> Pricing</p>
+      <h2 id="priceTitle" data-split>Start free. Pay when the team grows.</h2>
+      <p class="lede" data-reveal>A trace is one request from entry to finish, however many services it crosses. Viewers are always free, so the whole company can open a link.</p>
+    </header>
+
+    <div class="bill" data-reveal>
+      <span class="bill__l is-on" id="lblMonthly">Monthly</span>
+      <button class="switch" id="billSwitch" type="button" role="switch" aria-checked="false" aria-labelledby="lblMonthly lblYearly"><span class="switch__knob"></span></button>
+      <span class="bill__l" id="lblYearly">Yearly</span>
+      <span class="save">Save 17%</span>
+    </div>
+    <p class="sr-only" id="priceStatus" role="status" aria-live="polite"></p>
+
+    <div class="plans">
+      <article class="plan" data-reveal>
+        <p class="plan__name">Free</p>
+        <p class="plan__tag">For side projects and your first traces.</p>
+        <div class="price">
+          <span class="price__cur" aria-hidden="true">$</span><span class="odo" data-fixed="0" aria-hidden="true"></span>
+          <span class="price__unit">forever</span>
+          <span class="sr-only">$0 forever</span>
+        </div>
+        <p class="price__note">No credit card. No time limit.</p>
+        <a class="btn btn--ghost btn--lg" href="#start">Start tracing free</a>
+        <ul class="plan__list">
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>50,000 traces a month</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Up to 5 services</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>7-day retention</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Trace explorer and source jump</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Node, Go, Python and Rust SDKs</li>
+        </ul>
+      </article>
+
+      <article class="plan plan--main" data-reveal>
+        <p class="plan__flag">Most teams start here</p>
+        <p class="plan__name">Team</p>
+        <p class="plan__tag">For teams that ship on Fridays.</p>
+        <div class="price">
+          <span class="price__cur" aria-hidden="true">$</span><span class="odo" id="teamPrice" data-monthly="29" data-yearly="24" aria-hidden="true"></span>
+          <span class="price__unit">per seat, per month</span>
+        </div>
+        <p class="price__note" id="teamNote">Billed monthly. Cancel any time.</p>
+        <a class="btn btn--primary btn--lg" href="#start" data-magnetic>Start 14-day trial <svg class="i arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        <ul class="plan__list">
+          <li class="plan__inc">Everything in Free, plus</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>2 million traces a month, pooled</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Unlimited services and viewers</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>30-day retention</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Tail-sampling rules and trace diff</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Alerts that link to the failing line</li>
+        </ul>
+      </article>
+
+      <article class="plan" data-reveal>
+        <p class="plan__name">Enterprise</p>
+        <p class="plan__tag">For regulated and very large systems.</p>
+        <div class="price price--custom">
+          <span class="price__word" aria-hidden="true">Custom</span>
+          <span class="sr-only">Custom pricing</span>
+        </div>
+        <p class="price__note">Volume pricing, annual contract.</p>
+        <button class="btn btn--ghost btn--lg" type="button" data-open-demo>Talk to sales</button>
+        <ul class="plan__list">
+          <li class="plan__inc">Everything in Team, plus</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>SSO, SCIM and audit log</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Single-tenant or self-hosted collector</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>EU and US region pinning</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>1-year retention, 99.99% SLA</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>A named engineer on call for you</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== PROOF ============================== -->
+<section class="section section-pad" id="proof" aria-labelledby="proofTitle" data-section="Proof">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow" data-reveal><span>06</span> From the on-call channel</p>
+      <h2 id="proofTitle" data-split>Engineers who got their nights back.</h2>
+    </header>
+
+    <div class="proof">
+      <figure class="quote quote--lead" data-reveal>
+        <svg class="quote__mark" viewBox="0 0 48 36" aria-hidden="true"><path d="M0 36V21.6C0 9.6 6.6 2.4 18 0l2.4 5.4C14.4 7.2 11.4 10.8 11.4 15.6H20V36H0Zm28 0V21.6C28 9.6 34.6 2.4 46 0l2 5.4C42.4 7.2 39.4 10.8 39.4 15.6H48V36H28Z" fill="currentColor"/></svg>
+        <blockquote><p>We used to grep six log streams and guess. Now the page links straight to line 142 of <span class="mono">charge.go</span> and the fix is a two-line pull request.</p></blockquote>
+        <figcaption>
+          <span class="avatar" aria-hidden="true">DO</span>
+          <span><b>Dana Okafor</b><small>Staff SRE, Marlowe Payments</small></span>
+        </figcaption>
+        <dl class="quote__metric"><dt>Median incident</dt><dd>47 min <i>to</i> 6 min</dd></dl>
+      </figure>
+
+      <div class="proof__side">
+        <figure class="quote" data-reveal>
+          <blockquote><p>It followed a request from a Node gateway through Kafka into a Rust worker without one manual span. I did not believe the trace was real until I checked the logs.</p></blockquote>
+          <figcaption>
+            <span class="avatar avatar--b" aria-hidden="true">TV</span>
+            <span><b>Tomás Vieira</b><small>Backend Lead, Fenwick Logistics</small></span>
+          </figcaption>
+        </figure>
+        <figure class="quote" data-reveal>
+          <blockquote><p>Tail sampling paid for the whole tool. We keep every error and about three percent of the healthy traffic. Our trace bill fell by two thirds.</p></blockquote>
+          <figcaption>
+            <span class="avatar avatar--c" aria-hidden="true">MZ</span>
+            <span><b>Mei-Lin Zhao</b><small>Principal Engineer, Quill Analytics</small></span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FAQ ============================== -->
+<section class="section section-pad" id="faq" aria-labelledby="faqTitle" data-section="FAQ">
+  <div class="wrap">
+    <div class="faq">
+      <header class="faq__head">
+        <p class="eyebrow" data-reveal><span>07</span> Questions</p>
+        <h2 id="faqTitle" data-split>Things engineers ask before they install.</h2>
+        <p class="lede" data-reveal>Not here? <button type="button" class="link" data-open-demo>Ask an engineer</button>. You will get a person, not a form letter.</p>
+      </header>
+
+      <div class="faq__list" id="faqList" data-reveal>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq1" aria-expanded="false" aria-controls="fa1"><span>How much overhead does Traceline add?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa1" role="region" aria-labelledby="fq1" inert><div><p>A median of 0.2 ms and 0.6 ms at p99 per request, and under 1% CPU on a typical service. Spans are batched and sent off the request path. If our collector is unreachable, the SDK drops data rather than block your code.</p></div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq2" aria-expanded="false" aria-controls="fa2"><span>Which languages and frameworks are supported?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa2" role="region" aria-labelledby="fq2" inert><div><p>Node.js 18+, Go 1.21+, Python 3.9+ and Rust 1.75+. Common HTTP servers, gRPC, Postgres, MySQL, Redis, Kafka, SQS and RabbitMQ are traced automatically. Anything else takes one wrapper call.</p></div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq3" aria-expanded="false" aria-controls="fa3"><span>Does Traceline store my source code?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa3" role="region" aria-labelledby="fq3" inert><div><p>Only the few lines around each frame that fails, not your repository. You can switch code preview off per service. On Enterprise, source snippets can live in a bucket you own.</p></div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq4" aria-expanded="false" aria-controls="fa4"><span>Will sampling throw away the trace I need?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa4" role="region" aria-labelledby="fq4" inert><div><p>No. Sampling is tail-based, so the decision is made after the request finishes. Errors and slow requests are always kept in full. Only healthy, fast traffic is sampled down, and you choose the rate per service.</p></div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq5" aria-expanded="false" aria-controls="fa5"><span>What happens if I go over 50,000 traces on Free?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa5" role="region" aria-labelledby="fq5" inert><div><p>Nothing breaks and we never cut you off mid-incident. Past the limit we keep every error trace and sample the healthy ones harder. We email you once, and you can upgrade when it suits you.</p></div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" id="fq6" aria-expanded="false" aria-controls="fa6"><span>Can I keep my data in one region or self-host?</span><svg class="i faq__icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+          <div class="faq__a" id="fa6" role="region" aria-labelledby="fq6" inert><div><p>Yes, on Enterprise. Pin data to the EU or the US, run single-tenant, or deploy the collector inside your own network. SSO, SCIM and an audit log come with it.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== CTA ============================== -->
+<section class="section cta" id="start" aria-labelledby="startTitle" data-section="Start">
+  <div class="wrap">
+    <div class="cta__inner">
+      <svg class="cta__trace" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+        <path id="ctaPath" d="M0 60 H180 L210 60 L240 30 H420 L450 60 H640 L670 88 H860 L890 60 H1200" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <p class="eyebrow" data-reveal><span>08</span> Start</p>
+      <h2 id="startTitle" data-split>Find the next failure in one click.</h2>
+      <p class="lede" data-reveal>Free up to 50,000 traces a month. No credit card. Install takes about a minute.</p>
+
+      <form class="cta__form" id="startForm" novalidate data-reveal>
+        <div class="field">
+          <label for="startEmail">Work email</label>
+          <input class="input input--lg" id="startEmail" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@company.com" required aria-describedby="startErr">
+        </div>
+        <button class="btn btn--primary btn--lg" type="submit" data-magnetic>Start tracing free <svg class="i arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+      </form>
+      <p class="field__err" id="startErr" role="alert"></p>
+      <div class="cta__done" id="startDone" tabindex="-1" hidden>
+        <span class="success__icon"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span>
+        <div><h3>Check your inbox.</h3><p>We sent a sign-in link to <b id="startMail"></b>. Your first trace appears about five seconds after you deploy.</p></div>
+      </div>
+      <p class="cta__fine" data-reveal>Rather see it live first? <button type="button" class="link" data-open-demo>Book a demo</button></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="#top" aria-label="Traceline, back to top">
+          <svg class="brand__mark" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="4" width="24" height="4" rx="2" fill="currentColor"/><rect x="6" y="11" width="13" height="4" rx="2" fill="currentColor" opacity=".65"/><rect x="11" y="18" width="14" height="4" rx="2" fill="#c8f531"/></svg>
+          <span class="brand__word">TRACELINE</span>
+        </a>
+        <p>Real-time error tracing for backend teams. Follow the request. Land on the line.</p>
+        <span class="status"><i></i>All systems operational</span>
+      </div>
+      <nav aria-label="Product">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="#demo">Trace explorer</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Developers">
+        <h3>Developers</h3>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">SDK reference</a></li>
+          <li><a href="#">CLI</a></li>
+          <li><a href="#">Open telemetry bridge</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Company">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Legal">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Data processing</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bar">
+      <span>&copy; 2026 Traceline Labs, Inc. A fictional product.</span>
+      <span>Built for the people who carry the pager.</span>
+    </div>
+  </div>
+  <div class="footer__word" id="footWord" aria-hidden="true">TRACELINE</div>
+</footer>
+
+<!-- ============================== DEMO DIALOG ============================== -->
+<dialog class="dialog" id="demoDialog" aria-labelledby="demoDlgTitle">
+  <div class="dialog__inner">
+    <div class="dialog__top">
+      <div>
+        <p class="eyebrow"><span>Demo</span></p>
+        <h2 id="demoDlgTitle">Book a 20-minute demo.</h2>
+      </div>
+      <button class="dialog__close" type="button" data-close-demo aria-label="Close"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <form id="demoForm" novalidate>
+      <div class="row">
+        <div class="field"><label for="dName">Name</label><input class="input" id="dName" name="name" type="text" autocomplete="name" required aria-describedby="dNameErr"><span class="field__err" id="dNameErr"></span></div>
+        <div class="field"><label for="dEmail">Work email</label><input class="input" id="dEmail" name="email" type="email" autocomplete="email" required aria-describedby="dEmailErr"><span class="field__err" id="dEmailErr"></span></div>
+      </div>
+      <div class="field">
+        <label for="dSize">Team size</label>
+        <select class="input" id="dSize" name="size">
+          <option>1 to 10 engineers</option>
+          <option>11 to 50 engineers</option>
+          <option>51 to 200 engineers</option>
+          <option>200+ engineers</option>
+        </select>
+      </div>
+      <div class="field"><label for="dNote">What are you debugging? <span class="opt">(optional)</span></label><textarea class="input" id="dNote" name="note" rows="3" placeholder="A queue that backs up on Mondays, a checkout that times out..."></textarea></div>
+      <button class="btn btn--primary btn--lg" type="submit">Request a demo <svg class="i arrow" aria-hidden="true"><use href="#i-arrow-right"/></svg></button>
+    </form>
+    <div class="success" role="status">
+      <span class="success__icon"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span>
+      <h3>Thanks, we have your request.</h3>
+      <p>An engineer will reply within one working day with two times that suit you. No slides, just a live trace of your own stack.</p>
+      <button class="btn btn--ghost" type="button" data-close-demo>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="js/vendor/gsap.min.js" defer></script>
+<script src="js/vendor/ScrollTrigger.min.js" defer></script>
+<script src="js/vendor/lenis.min.js" defer></script>
+<script src="js/highlight.js" defer></script>
+<script src="js/hero.js" defer></script>
+<script src="js/explorer.js" defer></script>
+<script src="js/features.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>
